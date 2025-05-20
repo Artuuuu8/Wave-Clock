@@ -1,0 +1,51 @@
+#config.yaml
+
+#Camera settings
+camera:
+  url: "ttps://edge02.nginx.hdontap.com/hosb3/hdontap_carlsbad_terra-mar-pt.stream/chunklist_w1792613303_vo.m3u8"
+  capture_interval: 60
+  capture_interval: 60
+
+#time window to monitor
+schedule:
+  start hour: 6
+  end hour: 18
+
+#model settings
+model: 
+  #path to trained pyTorch model
+  checkpoint_path: "https://hls.cdn-surfline.com/oregon/wc-terramarpt/playlist.m3u8"
+  #probaility threshold for good waves
+  threshold: 0.5
+  #image processing (width, height)
+  input_size: [224, 224]
+
+#notification settings
+alarm: 
+  method: pushover
+
+#pushover settings
+pushpover: 
+  user_key: "YOUR_USER_KEY"
+  api_tokern: "Your pushover api token"
+  
+#twillio settings
+twilio:
+  account_sid: "Your twillio account sid"
+  auth_token: "Your twillio auth token"
+  from_number: "+1234567890" # Twilio number
+  to_number: "+0987654321" # Your number
+
+#local sound settings
+sound_files: ".assets/alarm.wav"
+
+#MQTT settings
+mqtt:
+  broker: "mqtt://localhost:1883"
+  topic: "wave-clock/alarm"
+
+#logging
+logging: 
+  log_dir: "./logs"
+  level: "INFO"
+
