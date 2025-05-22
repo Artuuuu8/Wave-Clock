@@ -38,11 +38,11 @@ try:
             #write frame to disk as JPEG
             cv2.inwrite(filename, frame)
             print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Saved frame to {filename}")
-            else:
-                #handle occasional read failure by logging anf retrying
-                print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Failed to grab a frame, retrying..")
-                #wait for the next capture interval
-            time.sleep(INTERVAL)
+        else:
+            #handle occasional read failure by logging anf retrying
+            print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Failed to grab a frame, retrying..")
+            #wait for the next capture interval
+        time.sleep(INTERVAL)
             finally:
                 #clean up by releasing videocapture on exit
                 cap.release()
