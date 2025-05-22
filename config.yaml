@@ -2,9 +2,9 @@
 
 #Camera settings
 camera:
-  url: "ttps://edge02.nginx.hdontap.com/hosb3/hdontap_carlsbad_terra-mar-pt.stream/chunklist_w1792613303_vo.m3u8"
+  url: "https://edge02.nginx.hdontap.com/hosb3/hdontap_carlsbad_terra-mar-pt.stream/chunklist_w1792613303_vo.m3u8"
   capture_interval: 60
-  capture_interval: 60
+  capture_interval: 120
 
 #time window to monitor
 schedule:

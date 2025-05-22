@@ -9,11 +9,11 @@ import yaml
 
 #load configuration from config.yaml
 with open("config.yaml", "r") as f:
-    config = yaml.safe_load(f)
+    cfg = yaml.safe_load(f)
 
-STREAM_URL = config['url'] # "https://edge02.nginx.hdontap.com/hosb3/hdontap_carlsbad_terra-mar-pt.stream/chunklist_w1792613303_vo.m3u8"
-INTERVAL = config['interval'] # 5 how often to save a frame
-OUT_DIR = config['data_dir', "data/raw frames"] # "data/raw frames" # directory to save frames
+STREAM_URL = cfg["camera"]["url"] # "https://edge02.nginx.hdontap.com/hosb3/hdontap_carlsbad_terra-mar-pt.stream/chunklist_w1792613303_vo.m3u8"
+INTERVAL = cfg["camera"]["capture_interval"] # 5 how often to save a frame
+OUT_DIR = cfg.get("data_dir", "data/raw frames") # "data/raw frames" # directory to save frames
 
 #prepare output directory
 os.makedirs(OUT_DIR, exist_ok=True)
@@ -36,17 +36,17 @@ try:
             #build filename with current UNIX timestamp
             filename = os.path.join(OUT_DIR, f"{ts}.jpg")
             #write frame to disk as JPEG
-            cv2.inwrite(filename, frame)
+            cv2.imwrite(filename, frame)
             print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Saved frame to {filename}")
         else:
             #handle occasional read failure by logging anf retrying
             print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Failed to grab a frame, retrying..")
             #wait for the next capture interval
         time.sleep(INTERVAL)
-            finally:
-                #clean up by releasing videocapture on exit
-                cap.release()
-                print("Stream closed.")
+finally:
+    #clean up by releasing videocapture on exit
+    cap.release()
+    print("Stream closed.")
 
 
 
