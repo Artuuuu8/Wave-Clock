@@ -20,33 +20,31 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 # open stream once at startup
 #videocapture will reconnect automatically on HLS segment change
-cap = cv2.VideoCapture(STREAM_URL)
-if not cap.isOpened():
-    raise RuntimeError(f"Could not open stream: {STREAM_URL}")\
-
-print(f"🎥 Scraping frames every {INTERVAL}s into '{OUT_DIR}/'")
+os.makedirs(OUT_DIR, exist_ok=True)
+print(f"🎥 Grabbing one fresh frame every {INTERVAL}s")
 
 #main loop to grab and save frames indefinitely
 try:
     while True:
         #read a single frame from stream
-        ret, frame = cap.read()
-        ts = int(time.time())
-        if ret:
-            #build filename with current UNIX timestamp
-            filename = os.path.join(OUT_DIR, f"{ts}.jpg")
-            #write frame to disk as JPEG
-            cv2.imwrite(filename, frame)
-            print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Saved frame to {filename}")
+        cap = cv2.VideoCapture(STREAM_URL)
+        if not cap.isOpened():
+            print("Error: Could not open video stream.")
+            break
         else:
-            #handle occasional read failure by logging anf retrying
-            print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Failed to grab a frame, retrying..")
-            #wait for the next capture interval
-        time.sleep(INTERVAL)
-finally:
-    #clean up by releasing videocapture on exit
-    cap.release()
-    print("Stream closed.")
+            ret, frame = cap.read()
+            cap.release()
+            if ret and frame is not None:
+                #save frame to disk
+                ts = int(time.time())
+                fn = os.path.join(OUT_DIR, f"frame_{ts}.jpg")
+                cv2.imwrite(fn, frame)
+                print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Saved frame to {fn}")
+            else:
+                print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Failed to grab a frame")
+        time.sleep(INTERVAL) #wait for the next interval
+except KeyboardInterrupt:
+    print("Stream capture interrupted by user.")
 
 
 
